@@ -1,4 +1,4 @@
-Getting-and-Cleaning-Data
+Getting and Cleaning Data
 =========================
 
 This is the course project under the Courera Data Science Specialization series. 
