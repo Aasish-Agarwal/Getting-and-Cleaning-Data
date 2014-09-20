@@ -65,15 +65,19 @@
   ## Merges the training and the test sets to create one data set.
   step1 <- function() {
     cat ("Executing Step 1:\n")
-    cat ("\tReading Test Data Set From: \"", datadir , "/test/X_test.txt\"\n" , sep = "")
+
     cat ("\tReading Training Data Set From: \"", datadir , "/train/X_train.txt\"\n", sep = "")
-    
-    # datadir
-    # alldata <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
-    # 'train/X_train.txt': Training set.
-    # 'test/X_test.txt': Test set.
-    
-    
+    training_data <<- read.table(paste(datadir,"train","X_train.txt",sep = "/"), colClasses = "character")
+
+    cat ("\tReading Test Data Set From: \"", datadir , "/test/X_test.txt\"\n" , sep = "")
+    test_data <<- read.table(paste(datadir,"test","X_test.txt", sep = "/"), colClasses = "character")
+
+    cat ("\tCombining Training & Test Data")
+    combined_data <<- rbind(training_data, test_data)
+
+    cat("\ttraining_data row count:", nrow(training_data), "\n")
+    cat("\test_data row count:", nrow(test_data), "\n")
+    cat("\tcombined_data row count:", nrow(combined_data), "\n")
   }
 
   step2 <- function() {
