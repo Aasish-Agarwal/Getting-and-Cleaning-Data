@@ -1,9 +1,7 @@
 ## Globals
-  ## URL for data
+library(reshape2)
+## URL for data
   url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-
-  ## Working directory name
-  work_dir <- "cleaning_data_project"
 
   ## Extracted Directory
   datadir <- "UCI HAR Dataset"
@@ -11,7 +9,6 @@
   ## Uncompression utility
   uncompress_util <- "unzip"
   uncompress_opt <- "-x"
-
   
   
 ## Service Routines ###################################################
@@ -41,19 +38,6 @@
 ## ###################################################
   
 ## INITIALIZATION ####################################
-  ## Record working directory
-  ## Create & move to working directory
-  ## Download & uncompress data
-  
-  ## Record working directory
-  base_dir <- getwd()
-  cat ("Started in directory: " ,getwd(), "\n")
-
-  ## Create & move to the working directory
-  if (!file.exists(work_dir)) {dir.create(work_dir)}
-  setwd(work_dir)
-  cat ("Changed to directory: " ,getwd() , "\n")
-  
   ## Download & uncompress data
   getdata()
 ## ###################################################
@@ -80,8 +64,39 @@
     cat("\tcombined_data row count:", nrow(combined_data), "\n")
   }
 
+  # Extracts only the measurements on the mean and standard deviation for each measurement. 
   step2 <- function() {
     cat ("Executing Step 2:\n")
+    subject_train <<- read.table(paste(datadir,"train","subject_train.txt",sep = "/"), colClasses = "character")
+    subject_test <<- read.table(paste(datadir,"test","subject_test.txt",sep = "/"), colClasses = "character")
+    subject <<- rbind(subject_train, subject_test)
+    
+    activity_train <<- read.table(paste(datadir,"train","y_train.txt",sep = "/"), colClasses = "character")
+    activity_test <<- read.table(paste(datadir,"test","y_test.txt",sep = "/"), colClasses = "character")
+    activity <<- rbind(activity_train, activity_test)
+    
+    names(subject) <<- c("Subject")
+    names(activity) <<- c("ActivityId")
+    
+    activity_labels <<- read.table(paste(datadir,"activity_labels.txt",sep = "/"), colClasses = "character")
+    features <<- read.table(paste(datadir,"features.txt",sep = "/"), colClasses = "character")
+    
+    names(activity_labels) <<- c("ActivityId", "Activity")
+    names(features) <<- c("FeatureId","Feature" )
+    
+    activity1 <<- merge(activity,activity_labels)
+    activity1 <<- cbind(subject,activity1$Activity)
+    names(activity1) <<- c("Subject", "Activity")
+    
+    names(combined_data) <<- features$Feature
+    
+    colstoselect <<- features$Feature[grepl("mean\\(\\)|std\\(\\)", features$Feature)]
+    
+    combined_data_new <<- combined_data[,colstoselect]
+    combined_data_new <<- cbind(activity1,combined_data_new)
+    combined_data_new <<- melt(combined_data_new,id=c("Subject", "Activity"), measure.vars=colstoselect)
+    
+  
   }
   step3 <- function() {
     cat ("Executing Step 3:\n")
@@ -96,20 +111,9 @@
   
   
   ## Calls
-  step1()
+  #step1()
   step2()
   step3()
   step4()
   step5()
-  
-## ###################################################
-  
-  
-
-## FINALIZATION ####################################
-  ## Revert to the original working directory
-
-  setwd(base_dir)
-  cat ("Switched back to directory: " ,getwd(), "\n")
-## ###################################################
   
