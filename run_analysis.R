@@ -1,5 +1,7 @@
 ## Globals
 library(reshape2)
+library(plyr)
+library(data.table)
 ## URL for data
   url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
@@ -95,8 +97,9 @@ library(reshape2)
     combined_data_new <<- combined_data[,colstoselect]
     combined_data_new <<- cbind(activity1,combined_data_new)
     combined_data_new <<- melt(combined_data_new,id=c("Subject", "Activity"), measure.vars=colstoselect)
-    
-  
+    combined_data_new <<- transform(combined_data_new,value = as.numeric(value))
+
+    combined_data_new <<- data.table(combined_data_new)[,list(count=.N , average=mean(value)), by = c("Subject","Activity","variable")]
   }
   step3 <- function() {
     cat ("Executing Step 3:\n")
