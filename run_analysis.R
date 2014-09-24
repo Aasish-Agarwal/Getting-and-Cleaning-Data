@@ -37,6 +37,19 @@ library(data.table)
     }
   }
 
+  convert_variable <- function (variable) {
+    cat("Called convert_variable with: ", variable , "\n")
+    # Domain
+    # Source
+    # Instrument
+    # Acceleration
+    # Jerk
+    # Magnitude
+    # Measure
+    # Axis
+    # fBodyBodyGyroJerkMag-std()-XYZ
+    
+  }
 ## ###################################################
   
 ## INITIALIZATION ####################################
@@ -100,6 +113,7 @@ library(data.table)
     combined_data_new <<- transform(combined_data_new,value = as.numeric(value))
 
     combined_data_new <<- data.table(combined_data_new)[,list(count=.N , average=mean(value)), by = c("Subject","Activity","variable")]
+    combined_data_tmp <<- combined_data_new[,c("col1","col2"):=f(),by=variable]
   }
   step3 <- function() {
     cat ("Executing Step 3:\n")
@@ -115,8 +129,9 @@ library(data.table)
   
   ## Calls
   #step1()
-  step2()
-  step3()
-  step4()
-  step5()
+  #step2()
+  #step3()
+  #step4()
+  #step5()
   
+convert_variable("fBodyBodyGyroJerkMag-std()-X")
