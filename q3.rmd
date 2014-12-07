@@ -242,10 +242,10 @@ combined <- merge(gdpdata, eddata, by= "CountryCode") %>%
 tbl_df() %>%
 select(CountryCode,rating,Long.Name,Income.Group) %>%
 mutate(rating = as.numeric(rating))
-#library(Hmisc)
-# combined <- mutate(combined, ratingGroup = cut2(combined$rating,5))
-#filter(combined, ratingGroup == "[  1, 39)" , Income.Group == "Lower middle income")
-
+library(Hmisc)
+combined <- mutate(combined, ratingGroup = cut2(combined$rating,5))
+combined
+combined <- filter(combined, ratingGroup == "[  1, 39)" , Income.Group == "Lower middle income")
 combined  
 
 ```
