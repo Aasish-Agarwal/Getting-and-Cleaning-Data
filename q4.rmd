@@ -161,8 +161,6 @@ combined <- merge(gdpdata, eddata, by= "CountryCode") %>%
 tbl_df() %>%
 filter(grepl('Fiscal year end: June', Special.Notes)) 
 
-#cat(combined$CountryCode , "," , combined$Special.Notes)
-
 nrow(combined)
 
 
@@ -170,11 +168,34 @@ nrow(combined)
 
 ## Question 5
 You can use the quantmod (http://www.quantmod.com/) package to get historical stock prices for publicly traded companies on the NASDAQ and NYSE. Use the following code to download data on Amazon's stock price and get the times the data was sampled.
+```
 library(quantmod)
 amzn = getSymbols("AMZN",auto.assign=FALSE)
 sampleTimes = index(amzn) 
+```
+
 How many values were collected in 2012? How many values were collected on Mondays in 2012?
-250, 47
-250, 51
-251, 47
-365, 52
+
+* 250, 47
+* 250, 51
+* 251, 47
+* 365, 52
+
+### Answer
+```{r, echo=FALSE}
+library(quantmod)
+amzn = getSymbols("AMZN",auto.assign=FALSE)
+sampleTimes = index(amzn) 
+
+
+collections_2012 <- sampleTimes[grep("2012", sampleTimes)]
+ncollections <- length(collections_2012)
+
+nmondays <- length(grep("Monday", weekdays(collections_2012)))
+
+cat(ncollections , "," , nmondays)
+
+
+
+```
+
