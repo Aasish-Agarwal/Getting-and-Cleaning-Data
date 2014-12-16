@@ -142,6 +142,15 @@ dataset <- dataset[colnames]
 Update Activity to change Id with descriptive value
 Join Activity, Data Set
 
+```{r, echo=TRUE}
+names(activitives) <- c("id")
+names(activitylabels) <- c("id","name")
+activitives <- merge(activitives, activitylabels, by="id", all.x=TRUE) %>% tbl_df()
+dataset <- cbind(activitives,dataset)
+dataset <- cbind(subjects,dataset) %>% tbl_df()
+dataset
+```
+
 #### Step4 - Label data set with descriptive variable names
 
 Join Activity, Subject, Data Set
