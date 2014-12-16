@@ -35,7 +35,9 @@ Good luck!
 
 ### Downloading Data
 ```{r, echo=FALSE}
-  url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+setwd("D:\\dev\\datascience\\gncdata")
+
+url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
   if (! file.exists("data")){
     dir.create("data")
   } 
@@ -51,15 +53,111 @@ Good luck!
   } 
 ```
 ### Uncompressing Data
-```{r, echo=FALSE}
+```{r, echo=TRUE}
   library(R.utils)
   created_dir <- "UCI HAR Dataset"
-  if ( file.exists(created_dir)){
-    cat("Removing directory: ", created_dir)
-    unlink(created_dir, recursive = TRUE)
+  if ( ! file.exists(created_dir)){
+    cat("Uncompressing file: ", projectDatafile)
+    unzip(projectDatafile)
+  } else {
+    cat("File already uncompressed")
   } 
-  
-  cat("Uncompressing file: ", projectDatafile)
-  unzip(projectDatafile)
+  cat("Done")
 
 ```
+### Loading Data Sets
+We have a total of 8 data sets to load
+
+- 'features.txt': List of all features. These are the names of 561 different indicators available in test & traing data sets.
+- 'activity_labels.txt': Links the class labels with their activity name.
+- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
+- 'train/X_train.txt': Training set.
+- 'train/y_train.txt': Training Activity Id.
+- 'train/subject_test.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
+- 'test/X_test.txt': Test set.
+- 'test/y_test.txt': Test Activity Id.
+
+```{r, echo=TRUE}
+library(dplyr)
+featurenames <- read.table(file.path(created_dir,"features.txt")) %>% tbl_df()
+activitylabels <- read.table(file.path(created_dir,"activity_labels.txt")) %>% tbl_df()
+
+training_subjects <- read.table(file.path(created_dir,"train", "subject_train.txt")) %>% tbl_df()
+
+training_activities <- read.table(file.path(created_dir,"train", "y_train.txt")) %>% tbl_df()
+
+training_data <- read.table(file.path(created_dir,"train", "X_train.txt")) %>% tbl_df()
+
+test_subjects <- read.table(file.path(created_dir,"test", "subject_test.txt")) %>% tbl_df()
+
+test_activities <- read.table(file.path(created_dir,"test", "y_test.txt")) %>% tbl_df()
+
+test_data <- read.table(file.path(created_dir,"test", "X_test.txt")) %>% tbl_df()
+
+cat("featurenames: ", nrow(featurenames),
+    ", activitylabels: ", nrow(activitylabels),
+    ", training_subjects: ", nrow(training_subjects),
+    ", training_activities: ", nrow(training_activities),
+    ", training_data: ", nrow(training_data),
+    ", test_subjects: ", nrow(test_subjects),
+    ", test_activities: ", nrow(test_activities),
+    ", test_data: ", nrow(test_data)
+    )
+
+```
+
+#### Step1 - Merging Data Sets
+
+We will merge 
+
+* test & training subjects
+* test & training activity id
+* test & training data sets
+
+```{r, echo=TRUE}
+activitives <- rbind(training_activities, test_activities)
+subjects <-  rbind(training_subjects, test_subjects)
+dataset <- rbind(training_data, test_data)
+
+cat("activitives: ", nrow(activitives),
+    ", subjects: ", nrow(subjects),
+    ", dataset: ", nrow(dataset)
+    )
+```
+
+#### Step2 - Extracting mean & standard deviation
+
+Add names to merged data set
+Update data set to include only mean & standard deviation
+
+```{r, echo=TRUE}
+names(dataset) <- featurenames$V2
+colnames <- grepl("mean\\(\\)|std\\(\\)", names(dataset))
+dataset <- dataset[colnames]
+
+```
+
+#### Step3 - Use descriptive activity names
+
+Update Activity to change Id with descriptive value
+Join Activity, Data Set
+
+#### Step4 - Label data set with descriptive variable names
+
+Join Activity, Subject, Data Set
+
+#### Step5 - Create a second, independent data set with average of each variable for each activity & each subject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
