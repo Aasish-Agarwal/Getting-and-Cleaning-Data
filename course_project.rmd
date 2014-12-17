@@ -161,6 +161,14 @@ Join Activity, Subject, Data Set
 
 #### Step5 - Create a second, independent data set with average of each variable for each activity & each subject
 
+```{r, echo=TRUE}
+tidy_dataset <- dataset %>% 
+  group_by(activity,subject) %>% 
+  summarise_each(funs(mean))
+
+tidy_dataset
+
+```
 
 
 
