@@ -143,11 +143,15 @@ Update Activity to change Id with descriptive value
 Join Activity, Data Set
 
 ```{r, echo=TRUE}
-names(activitives) <- c("id")
-names(activitylabels) <- c("id","name")
-activitives <- merge(activitives, activitylabels, by="id", all.x=TRUE) %>% tbl_df()
+names(activitives) <- c("activityid")
+names(activitylabels) <- c("activityid","activity")
+names(subjects) <- c("subject")
+activitives <- merge(activitives, activitylabels, by="activityid", all.x=TRUE) %>% tbl_df()
+
 dataset <- cbind(activitives,dataset)
-dataset <- cbind(subjects,dataset) %>% tbl_df()
+dataset <- cbind(subjects,dataset) %>% 
+  tbl_df() %>% 
+  select(-activityid)
 dataset
 ```
 
