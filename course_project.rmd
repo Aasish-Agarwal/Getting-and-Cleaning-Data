@@ -157,7 +157,21 @@ dataset
 
 #### Step4 - Label data set with descriptive variable names
 
-Join Activity, Subject, Data Set
+```{r, echo=TRUE}
+dsnames <- names(dataset)
+
+dsnames <- gsub('\\(|\\)', "", dsnames)
+
+dsnames <- gsub('BodyBody', 'Body', dsnames)
+
+dsnames <- gsub('\\-', '_', dsnames)
+dsnames <- gsub('^f', 'Freq', dsnames)
+
+dsnames <- gsub('^t', 'Time', dsnames)
+dsnames <- gsub('Mag', 'Magnitude', dsnames)
+
+```
+
 
 #### Step5 - Create a second, independent data set with average of each variable for each activity & each subject
 
