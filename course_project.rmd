@@ -170,6 +170,12 @@ dsnames <- gsub('^f', 'Freq', dsnames)
 dsnames <- gsub('^t', 'Time', dsnames)
 dsnames <- gsub('Mag', 'Magnitude', dsnames)
 
+dsnames <- gsub('Acc', 'Acceleration', dsnames)
+dsnames <- gsub('GyroJerk', 'AngularJerk', dsnames)
+dsnames <- gsub('Gyro', 'AngularVelocity', dsnames)
+
+names(dataset) <- dsnames
+
 ```
 
 
@@ -184,15 +190,23 @@ tidy_dataset
 
 ```
 
+```{r, echo=TRUE}
+ds1 <- gather(dataset,variable,value, -subject, -activity)
+
+getDomain <- function(varname) {
+  if ( grepl("^Time",varname[1]) ) {
+		return ("Time")
+	}
+	
+	if ( grepl("^Freq",varname[1]) ) {
+		return ("Frequency")
+	}
+	
+	return ("NA")
+}
+
+ds1 <- mutate(ds1, domain = getDomain(variable))
+ds1
 
 
-
-
-
-
-
-
-
-
-
-
+```
