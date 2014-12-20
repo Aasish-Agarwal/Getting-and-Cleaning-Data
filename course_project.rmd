@@ -191,22 +191,100 @@ tidy_dataset
 ```
 
 ```{r, echo=TRUE}
+library(tidyr)
 ds1 <- gather(dataset,variable,value, -subject, -activity)
 
 getDomain <- function(varname) {
-  if ( grepl("^Time",varname[1]) ) {
+  if ( grepl("^Time",varname) ) {
 		return ("Time")
 	}
 	
-	if ( grepl("^Freq",varname[1]) ) {
+	if ( grepl("^Freq",varname) ) {
 		return ("Frequency")
 	}
 	
 	return ("NA")
 }
 
-ds1 <- mutate(ds1, domain = getDomain(variable))
-ds1
+getSignal <- function(varname) {
+  if ( grepl("Gravity",varname) ) {
+		return ("Gravity")
+	}
 
+  if ( grepl("Body",varname) ) {
+		return ("Body")
+	}
+	
+
+	return ("NA")
+}
+
+getAxis <- function(varname) {
+  if ( grepl("(_[xX])$", varname)) {
+    return ("X")
+	}
+  if ( grepl("(_[yY])$", varname) ) {
+    return ("Y")
+	}
+  if ( grepl("(_[zZ])$", varname) ) {
+    return ("Z")
+	}
+	return ("NA")
+}
+
+getValueType <- function(varname) {
+  if ( grepl("(_mean)", varname))  {
+    return ("mean")
+  }
+  if ( grepl("(_std)", varname))  {
+    return ("std")
+  }
+
+  return ("NA")
+}
+
+getFeature <- function(varname) {
+  if ( grepl("(AngularVelocity_)", varname))  {
+    return ("AngularVelocity")
+  }
+  if ( grepl("(AccelerationMagnitude)", varname))  {
+    return ("AccelerationMagnitude")
+  }
+  if ( grepl("(Acceleration_)", varname))  {
+    return ("Acceleration")
+  }
+  if ( grepl("(AccelerationJerk_)", varname)) {
+    return ("AccelerationJerk")
+  }
+  if ( grepl("(AngularJerk_)", varname)) {
+    return ("AngularJerk")
+  }
+
+  if ( grepl("(AngularVelocityMagnitude_)", varname))  {
+    return ("AngularVelocityMagnitude")
+  }
+
+  if ( grepl("(AngularJerkMagnitude_)", varname)) {
+    return ("AngularJerkMagnitude")
+  }
+
+  if ( grepl("(AccelerationJerkMagnitude_)", varname)) {
+    return ("AccelerationJerkMagnitude")
+  }
+
+
+
+  return ("NA")
+}
+
+
+ds1 <- mutate(ds1, domain = sapply(variable, getDomain) , 
+              signal = sapply(variable, getSignal) ,
+              feature = sapply(variable, getFeature) ,
+              axis = sapply(variable, getAxis), 
+              valuetype = sapply(variable, getValueType))
+ds2 <- group_by(ds1,variable,domain,signal,feature,axis,valuetype)
+ds2 <-summarize(ds2,meanvalue = mean(value), count = n())
+ds2
 
 ```
