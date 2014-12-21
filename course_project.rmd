@@ -34,10 +34,13 @@ Good luck!
 
 
 ### Downloading Data
-```{r, echo=FALSE}
-setwd("D:\\dev\\datascience\\gncdata")
+Before we start with the tests we will download and uncompress the test data
 
-url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+```{r, echo=FALSE}
+
+  url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+  cat ("Creating folder named data to download the dataset")
+  cat ("Directory is created if it does not already exists")
   if (! file.exists("data")){
     dir.create("data")
   } 
@@ -288,3 +291,7 @@ ds2 <-summarize(ds2,meanvalue = mean(value), count = n())
 ds2
 
 ```
+
+
+
+
