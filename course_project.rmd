@@ -199,16 +199,15 @@ names(dataset) <- dsnames
 
 In this step we will create a tidy data set having columns
 
-* subject - Time, Frequency
-* activity - Time, Frequency
+* subject - 1 to 30
+* activity - LAYING, SITTING, STANDING, WALKING, WALKING_DOWNSTAIRS, WALKING_UPSTAIRS
 * domain - Time, Frequency
 * signal - Body, Gravity
-* feature - 
+* feature - Acceleration, AccelerationJerk, AccelerationJerkMagnitude, AccelerationMagnitude, AngularJerkMagnitude, AngularVelocity, AngularVelocityMagnitude, AngularJerk  
 * axis - X , Y , Z
 * valuetype - mean, std
-
-
-
+* meanvalue - Mean of the vakue column from base data set grouped by subject, activity, domain,signal,feature,axis,valuetype
+* count - Count of readings used to calculate meanvalue from base data set grouped by subject, activity, domain,signal,feature,axis,valuetype
 
 
 ```{r, echo=TRUE}
@@ -311,7 +310,11 @@ tidydataset <- dataset %>%
 tidydataset
 
 ```
+This tidydataset is than persisted in file *human_activity_recognition.txt*
 
-
+```{r, echo=TRUE}
+f <- file.path(getwd(), "human_activity_recognition.txt")
+write.table(tidydataset, f, quote = FALSE, sep = "\t", row.names = FALSE)
+```
 
 
