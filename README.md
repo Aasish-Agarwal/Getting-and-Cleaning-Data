@@ -22,4 +22,6 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 
 
 # Executing the project
-By executing 
+By executing run_analyis.R, we execute all steps of the project.
+Specific details are documented in course_project.rmd
+
