@@ -1,4 +1,5 @@
 Tidy data is created with 9 columns.
+
 1) subject - 1 to 30
 2) activity - LAYING, SITTING, STANDING, WALKING, WALKING_DOWNSTAIRS, WALKING_UPSTAIRS
 3) domain - Time, Frequency
