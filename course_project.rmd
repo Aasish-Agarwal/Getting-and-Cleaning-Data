@@ -70,7 +70,7 @@ Data is uncompressed only if the directory "UCI HAR Dataset" does not exists in 
 
 ```
 ### Loading Data Sets
-We have a total of 8 data sets to load
+Before we start executing the steps of the project we will load the required data sets. We have a total of 8 data sets to load
 
 - 'features.txt': List of all features. These are the names of 561 different indicators available in test & traing data sets.
 - 'activity_labels.txt': Links the class labels with their activity name.
@@ -98,6 +98,7 @@ test_activities <- read.table(file.path(created_dir,"test", "y_test.txt")) %>% t
 
 test_data <- read.table(file.path(created_dir,"test", "X_test.txt")) %>% tbl_df()
 
+cat("Sizes of different data sets are printed to verify that data sets have correct number of records") 
 cat("featurenames: ", nrow(featurenames),
     ", activitylabels: ", nrow(activitylabels),
     ", training_subjects: ", nrow(training_subjects),
