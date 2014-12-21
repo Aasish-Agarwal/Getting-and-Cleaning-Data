@@ -136,21 +136,24 @@ cat("activitives: ", nrow(activitives),
 
 Add names to merged data set
 Update data set to include only mean & standard deviation
+We are ettracing all featues where name contains mean() or std()
 
 ```{r, echo=TRUE}
 # Add names to merged data set
 names(dataset) <- featurenames$V2
 
-# Get the list 
+# Extract the column names which contains mean() or std() 
 colnames <- grepl("mean\\(\\)|std\\(\\)", names(dataset))
-dataset <- dataset[colnames]
 
+# Select the subset
+dataset <- dataset[colnames]
 ```
 
 #### Step3 - Use descriptive activity names
 
 Update Activity to change Id with descriptive value
 Join Activity, Data Set
+Remove activityid
 
 ```{r, echo=TRUE}
 names(activitives) <- c("activityid")
@@ -162,10 +165,13 @@ dataset <- cbind(activitives,dataset)
 dataset <- cbind(subjects,dataset) %>% 
   tbl_df() %>% 
   select(-activityid)
+
+# print how the dataset looks like
 dataset
 ```
 
 #### Step4 - Label data set with descriptive variable names
+See the code below to see how have we changed Abbreviations to full name in line with the *features_info.txt* provided with the data set
 
 ```{r, echo=TRUE}
 dsnames <- names(dataset)
@@ -191,18 +197,22 @@ names(dataset) <- dsnames
 
 #### Step5 - Create a second, independent data set with average of each variable for each activity & each subject
 
-```{r, echo=TRUE}
-tidy_dataset <- dataset %>% 
-  group_by(activity,subject) %>% 
-  summarise_each(funs(mean))
+In this step we will create a tidy data set having columns
 
-tidy_dataset
+* subject - Time, Frequency
+* activity - Time, Frequency
+* domain - Time, Frequency
+* signal - Body, Gravity
+* feature - 
+* axis - X , Y , Z
+* valuetype - mean, std
 
-```
+
+
+
 
 ```{r, echo=TRUE}
 library(tidyr)
-ds1 <- gather(dataset,variable,value, -subject, -activity)
 
 getDomain <- function(varname) {
   if ( grepl("^Time",varname) ) {
@@ -287,15 +297,18 @@ getFeature <- function(varname) {
   return ("NA")
 }
 
-
-ds1 <- mutate(ds1, domain = sapply(variable, getDomain) , 
+tidydataset <- dataset %>% 
+  gather(variable,value, -subject, -activity) %>%
+  mutate(domain = sapply(variable, getDomain) , 
               signal = sapply(variable, getSignal) ,
               feature = sapply(variable, getFeature) ,
               axis = sapply(variable, getAxis), 
-              valuetype = sapply(variable, getValueType))
-ds2 <- group_by(ds1,variable,domain,signal,feature,axis,valuetype)
-ds2 <-summarize(ds2,meanvalue = mean(value), count = n())
-ds2
+              valuetype = sapply(variable, getValueType)) %>% 
+  select(-variable)  %>% 
+  group_by(subject, activity, domain,signal,feature,axis,valuetype) %>%
+  summarize(meanvalue = mean(value), count = n())
+
+tidydataset
 
 ```
 
