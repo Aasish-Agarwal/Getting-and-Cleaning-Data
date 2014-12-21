@@ -56,6 +56,7 @@ Before we start with the tests we will download and uncompress the test data
   } 
 ```
 ### Uncompressing Data
+Data is uncompressed only if the directory "UCI HAR Dataset" does not exists in current working directory
 ```{r, echo=TRUE}
   library(R.utils)
   created_dir <- "UCI HAR Dataset"
