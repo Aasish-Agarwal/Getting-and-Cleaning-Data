@@ -115,14 +115,16 @@ cat("featurenames: ", nrow(featurenames),
 
 We will merge 
 
-* test & training subjects
-* test & training activity id
-* test & training data sets
+* Test & Training Subjects
+* Test & Training Activity Id
+* Test & Training Data Sets
 
 ```{r, echo=TRUE}
 activitives <- rbind(training_activities, test_activities)
 subjects <-  rbind(training_subjects, test_subjects)
 dataset <- rbind(training_data, test_data)
+
+cat("dataset, activities & subjects must have the same size after merging ")
 
 cat("activitives: ", nrow(activitives),
     ", subjects: ", nrow(subjects),
@@ -136,7 +138,10 @@ Add names to merged data set
 Update data set to include only mean & standard deviation
 
 ```{r, echo=TRUE}
+# Add names to merged data set
 names(dataset) <- featurenames$V2
+
+# Get the list 
 colnames <- grepl("mean\\(\\)|std\\(\\)", names(dataset))
 dataset <- dataset[colnames]
 
